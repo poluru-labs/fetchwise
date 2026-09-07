@@ -1,4 +1,4 @@
-import { createDemoClient } from "./mock-api.ts";
+import { createDemoClient } from "../shared/mock-api.ts";
 
 const api = createDemoClient({
   retry: {
@@ -10,6 +10,5 @@ const api = createDemoClient({
   },
 });
 
-// /flaky returns 503 twice, then 200.
 const result = await api.get("/flaky");
 console.log("Succeeded after retries:", result);

@@ -1,5 +1,5 @@
-import { ValidationError } from "../src/index.ts";
-import { createDemoClient, type User } from "./mock-api.ts";
+import { ValidationError } from "../../src/index.ts";
+import { createDemoClient, type User } from "../shared/mock-api.ts";
 
 const UserSchema = {
   parse(data: unknown): User {

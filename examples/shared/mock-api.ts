@@ -1,4 +1,4 @@
-import { createClient, type ClientOptions } from "../src/index.ts";
+import { createClient, type ClientOptions } from "../../src/index.ts";
 
 export type User = {
   id: number;

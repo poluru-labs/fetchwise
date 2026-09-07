@@ -1,4 +1,4 @@
-import { generateTypes } from "../src/index.ts";
+import { generateTypes } from "../../src/index.ts";
 
 const source = generateTypes({
   name: "ShopAPI",

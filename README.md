@@ -2,7 +2,7 @@
 
 A small, type-safe HTTP client for TypeScript and JavaScript. Built on the Fetch API.
 
-Works in **any JS environment** — browsers, Node, Deno, Bun, React Native, and frameworks like React, Vue, Svelte, Next.js, Nuxt, and Angular.
+Works in **any JS environment** — browsers, Node, Deno, Bun, React Native, and frameworks like React, Vue, Angular, Lit, Next.js, and Nuxt.
 
 Automatic retries · Response validation · Interceptors · Generated API types · Multiple API hosts
 
@@ -43,7 +43,7 @@ bun add @poluru-labs/fetchwise
 | CommonJS | `const { createClient } = require("@poluru-labs/fetchwise")` |
 | Default import | `import fetchwise from "@poluru-labs/fetchwise"` |
 | Browser `<script>` | `fetchwise.createClient(...)` via unpkg / jsDelivr |
-| React, Vue, Svelte, Angular | Same ESM import — no adapter |
+| React, Vue, Angular, Lit | Same ESM import — no adapter |
 | Next.js, Nuxt, SvelteKit, Remix | Same import on server and client |
 | Deno / Bun / Workers | Same ESM import |
 
@@ -57,7 +57,7 @@ The core library has **no Node-only APIs**. It uses `globalThis.fetch`, so it ru
 </script>
 ```
 
-Framework copy-paste files: [`examples/frameworks`](examples/frameworks).
+Examples by stack: [`examples/`](examples) — TypeScript, JavaScript, React, Vue, Angular, and Lit.
 
 ## Quick start
 
@@ -82,7 +82,7 @@ const created = await api.post<User>("/users", {
 });
 ```
 
-Plain JavaScript is the same API. See [`examples/javascript.js`](examples/javascript.js).
+Plain JavaScript is the same API. See [`examples/javascript`](examples/javascript).
 
 ## Features
 
@@ -217,11 +217,20 @@ await users.getUser({ params: { id: 1 } });
 
 ## Examples
 
-Runnable files live in [`examples/`](examples). Framework snippets live in [`examples/frameworks/`](examples/frameworks).
+Organized by stack in [`examples/`](examples):
+
+| Folder | Pattern |
+| --- | --- |
+| [`typescript`](examples/typescript) | Generics, retries, generated types |
+| [`javascript`](examples/javascript) | ESM, CommonJS, browser script |
+| [`react`](examples/react) | Shared client + `useUsers` hook |
+| [`vue`](examples/vue) | Composable + SFCs |
+| [`angular`](examples/angular) | `ApiService` + signals |
+| [`lit`](examples/lit) | LitElement custom elements |
 
 ```bash
 npm install
-npm run example examples/basic.ts
+npm run example examples/typescript/basic.ts
 ```
 
 ## API

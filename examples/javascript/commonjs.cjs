@@ -1,3 +1,4 @@
+// Node CommonJS — after: npm install @poluru-labs/fetchwise
 const { createClient } = require("@poluru-labs/fetchwise");
 
 const api = createClient({
@@ -10,4 +11,7 @@ async function main() {
   console.log(users);
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

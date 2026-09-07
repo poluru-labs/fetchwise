@@ -1,4 +1,4 @@
-import { createDemoClient } from "./mock-api.ts";
+import { createDemoClient } from "../shared/mock-api.ts";
 
 const api = createDemoClient();
 

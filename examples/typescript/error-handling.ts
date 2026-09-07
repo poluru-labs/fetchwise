@@ -1,5 +1,5 @@
-import { HTTPError, TimeoutError } from "../src/index.ts";
-import { createDemoClient } from "./mock-api.ts";
+import { HTTPError, TimeoutError } from "../../src/index.ts";
+import { createDemoClient } from "../shared/mock-api.ts";
 
 const api = createDemoClient({
   timeout: 8_000,

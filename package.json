@@ -31,6 +31,7 @@
     "nextjs",
     "nuxt",
     "angular",
+    "lit",
     "ssr",
     "isomorphic"
   ],

@@ -1,6 +1,6 @@
-import { defineApi } from "../src/index.ts";
-import { createDemoClient } from "./mock-api.ts";
-import type { CreateUser, ShopAPI, User } from "./shop-api.ts";
+import { defineApi } from "../../src/index.ts";
+import { createDemoClient } from "../shared/mock-api.ts";
+import type { CreateUser, ShopAPI, User } from "../shared/shop-api.ts";
 
 const api = createDemoClient<ShopAPI>();
 

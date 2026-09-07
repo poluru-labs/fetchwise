@@ -1,5 +1,5 @@
-import { HTTPError } from "../src/index.ts";
-import { createDemoClient } from "./mock-api.ts";
+import { HTTPError } from "../../src/index.ts";
+import { createDemoClient } from "../shared/mock-api.ts";
 
 const api = createDemoClient();
 
