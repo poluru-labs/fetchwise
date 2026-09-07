@@ -56,3 +56,13 @@ export function toFetchwiseError(
   }
   return new FetchwiseError(fallback, { cause: error });
 }
+
+/** Works in browsers, Node, workers, and React Native — no DOMException required. */
+export function isAbortError(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === "object" &&
+      "name" in error &&
+      (error as { name?: string }).name === "AbortError",
+  );
+}

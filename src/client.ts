@@ -3,6 +3,7 @@ import {
   HTTPError,
   TimeoutError,
   ValidationError,
+  isAbortError,
   toFetchwiseError,
 } from "./errors.js";
 import { InterceptorManager } from "./interceptors.js";
@@ -287,6 +288,7 @@ export class Fetchwise<TApi extends ApiSchema = ApiSchema> {
 
     try {
       const fetchPromise = fetchFn(request.url, {
+        credentials: this.options.credentials,
         ...request.fetchOptions,
         method: request.method,
         headers: request.headers,
@@ -323,7 +325,7 @@ export class Fetchwise<TApi extends ApiSchema = ApiSchema> {
             });
       }
 
-      if (error instanceof DOMException && error.name === "AbortError") {
+      if (isAbortError(error)) {
         throw new FetchwiseError("Request was aborted", {
           url: request.url,
           method: request.method,

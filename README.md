@@ -2,16 +2,17 @@
 
 A small, type-safe HTTP client for TypeScript and JavaScript. Built on the Fetch API.
 
-Automatic retries · Response validation · Interceptors · Generated API types
+Works in **any JS environment** — browsers, Node, Deno, Bun, React Native, and frameworks like React, Vue, Svelte, Next.js, Nuxt, and Angular.
+
+Automatic retries · Response validation · Interceptors · Generated API types · Multiple API hosts
 
 ```ts
-import { createClient } from "fetchwise";
+import { createClient } from "@poluru-labs/fetchwise";
 
 const api = createClient({
   baseURL: {
     default: "https://api.shop.com",
     auth: "https://auth.shop.com",
-    payments: "https://payments.shop.com",
   },
   retry: 3,
 });
@@ -23,31 +24,65 @@ const session = await api.get("/session", { baseURL: "auth" });
 ## Install
 
 ```bash
-npm install fetchwise
+npm install @poluru-labs/fetchwise
 ```
 
-Works in Node.js 18+, browsers, and any runtime with `fetch`.
+```bash
+pnpm add @poluru-labs/fetchwise
+yarn add @poluru-labs/fetchwise
+bun add @poluru-labs/fetchwise
+```
+
+> The unscoped name `fetchwise` is already taken on npm, so this package is published as `@poluru-labs/fetchwise`.
+
+## Works everywhere
+
+| Environment | How to import |
+| --- | --- |
+| ESM / TypeScript | `import { createClient } from "@poluru-labs/fetchwise"` |
+| CommonJS | `const { createClient } = require("@poluru-labs/fetchwise")` |
+| Default import | `import fetchwise from "@poluru-labs/fetchwise"` |
+| Browser `<script>` | `fetchwise.createClient(...)` via unpkg / jsDelivr |
+| React, Vue, Svelte, Angular | Same ESM import — no adapter |
+| Next.js, Nuxt, SvelteKit, Remix | Same import on server and client |
+| Deno / Bun / Workers | Same ESM import |
+
+The core library has **no Node-only APIs**. It uses `globalThis.fetch`, so it runs anywhere Fetch exists.
+
+```html
+<script src="https://unpkg.com/@poluru-labs/fetchwise"></script>
+<script>
+  const api = fetchwise.createClient({ baseURL: "https://api.shop.com" });
+  api.get("/users").then(console.log);
+</script>
+```
+
+Framework copy-paste files: [`examples/frameworks`](examples/frameworks).
 
 ## Quick start
 
 ```ts
-import { createClient } from "fetchwise";
+import { createClient } from "@poluru-labs/fetchwise";
 
 type User = { id: number; name: string; email: string };
 
 const api = createClient({
   baseURL: "https://api.shop.com",
   headers: { Accept: "application/json" },
+  credentials: "include",
   timeout: 8_000,
   retry: { attempts: 3, delay: 300 },
 });
 
 const users = await api.get<User[]>("/users");
 const user = await api.get<User>("/users/:id", { params: { id: 1 } });
-const created = await api.post<User>("/users", { name: "Poluru Ada", email: "poluru.ada@shop.com" });
+const created = await api.post<User>("/users", {
+  name: "Poluru Ada",
+  email: "poluru.ada@shop.com",
+});
 ```
 
-The same API works from JavaScript. See [`examples/javascript.js`](examples/javascript.js).
+Plain JavaScript is the same API. See [`examples/javascript.js`](examples/javascript.js).
 
 ## Features
 
@@ -99,7 +134,6 @@ Pass any schema with a `parse()` method. Zod, Valibot, ArkType, or a tiny custom
 ```ts
 const UserSchema = {
   parse(data: unknown): User {
-    // throw if the payload is not a User
     return data as User;
   },
 };
@@ -149,7 +183,7 @@ const created = await api.post("/users", { name: "Poluru Ada", email: "poluru.ad
 Or generate that interface from JSON:
 
 ```bash
-npx fetchwise generate api.spec.json -o api.types.ts
+npx @poluru-labs/fetchwise generate api.spec.json -o api.types.ts
 ```
 
 ```json
@@ -168,7 +202,7 @@ npx fetchwise generate api.spec.json -o api.types.ts
 Named methods are available too:
 
 ```ts
-import { defineApi } from "fetchwise";
+import { defineApi } from "@poluru-labs/fetchwise";
 
 const users = defineApi({
   client: api,
@@ -183,14 +217,12 @@ await users.getUser({ params: { id: 1 } });
 
 ## Examples
 
-Step-by-step files live in [`examples/`](examples). Start here:
+Runnable files live in [`examples/`](examples). Framework snippets live in [`examples/frameworks/`](examples/frameworks).
 
 ```bash
 npm install
 npm run example examples/basic.ts
 ```
-
-How to run each example, generate types, and copy a starter snippet: [`examples/README.md`](examples/README.md).
 
 ## API
 
@@ -200,11 +232,12 @@ How to run each example, generate types, and copy a starter snippet: [`examples/
 | --- | --- | --- | --- |
 | `baseURL` | `string \| { default?: string; [name: string]: string }` | | Default host, or named hosts for multiple APIs |
 | `headers` | `HeadersInit` | | Default headers |
+| `credentials` | `RequestCredentials` | | Browser CORS cookies (`include`, `same-origin`) |
 | `timeout` | `number` | | Request timeout in ms |
 | `retry` | `number \| RetryOptions \| false` | `false` | Retry policy |
 | `fetch` | `typeof fetch` | `globalThis.fetch` | Custom fetch implementation |
 
-`fetchwise(options)` is an alias of `createClient(options)`.
+`fetchwise(options)` and the default export are aliases of `createClient(options)`.
 
 ### Methods
 
@@ -243,16 +276,18 @@ Path tokens like `/users/:id` are filled from `params`.
 | `FetchwiseError` | Network, abort, or other failures |
 
 ```ts
-import { HTTPError } from "fetchwise";
+import { HTTPError } from "@poluru-labs/fetchwise";
 
 try {
   await api.get("/missing");
 } catch (error) {
-  if (error instanceof HTTPError) {
+  if (error instanceof HTTPError || error?.name === "HTTPError") {
     console.log(error.status, error.data);
   }
 }
 ```
+
+Use `error.name` when multiple copies of the package are bundled.
 
 ## License
 

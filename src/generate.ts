@@ -43,7 +43,7 @@ function formatRoute(route: GenerateRoute): string {
 
 /**
  * Generate a TypeScript API interface from a small JSON spec.
- * Use this by hand, or via `npx fetchwise generate api.json`.
+ * Use this by hand, or via `npx @poluru-labs/fetchwise generate api.json`.
  */
 export function generateTypes(spec: GenerateSpec): string {
   const name = spec.name ?? "API";

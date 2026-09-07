@@ -56,6 +56,8 @@ export interface ClientOptions {
    */
   baseURL?: BaseURLConfig;
   headers?: HeadersInit;
+  /** Browser CORS cookies/auth. Same as fetch `credentials`. */
+  credentials?: RequestCredentials;
   timeout?: number;
   retry?: number | RetryOptions | false;
   fetch?: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;

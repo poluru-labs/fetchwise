@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>fetchwise vanilla JS</title>
+  </head>
+  <body>
+    <pre id="out">Loading…</pre>
+    <script src="../../dist/index.global.js"></script>
+    <script>
+      const api = fetchwise.createClient({
+        baseURL: "https://api.shop.com",
+        retry: 2,
+      });
+
+      api
+        .get("/users")
+        .then((users) => {
+          document.getElementById("out").textContent = JSON.stringify(users, null, 2);
+        })
+        .catch((error) => {
+          document.getElementById("out").textContent = error.message;
+        });
+    </script>
+  </body>
+</html>

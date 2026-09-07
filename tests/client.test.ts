@@ -120,4 +120,15 @@ describe("createClient", () => {
 
     await expect(api.get("/slow")).rejects.toBeInstanceOf(TimeoutError);
   });
+
+  it("forwards browser credentials to fetch", async () => {
+    const fetchMock = vi.fn<FetchMock>(async () => jsonResponse({ ok: true }));
+    const api = createClient({
+      fetch: fetchMock,
+      credentials: "include",
+    });
+
+    await api.get("/me");
+    expect(fetchMock.mock.calls[0]?.[1]?.credentials).toBe("include");
+  });
 });

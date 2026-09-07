@@ -1,4 +1,4 @@
-import { HTTPError, TimeoutError, ValidationError } from "./errors.js";
+import { HTTPError, TimeoutError, ValidationError, isAbortError } from "./errors.js";
 import type { RetryOptions } from "./types.js";
 
 export const DEFAULT_RETRY_STATUSES = [408, 429, 500, 502, 503, 504];
@@ -56,7 +56,7 @@ export function shouldRetry(error: unknown, options: RetryOptions): boolean {
   }
 
   if (error instanceof TimeoutError) return true;
-  if (error instanceof DOMException && error.name === "AbortError") return false;
+  if (isAbortError(error)) return false;
 
   return true;
 }

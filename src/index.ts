@@ -1,4 +1,5 @@
 export { Fetchwise, createClient, fetchwise } from "./client.js";
+export { createClient as default } from "./client.js";
 export { defineApi } from "./define-api.js";
 export { generateTypes } from "./generate.js";
 export {

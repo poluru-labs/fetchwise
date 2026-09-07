@@ -34,6 +34,7 @@ npm run example examples/multiple-base-urls.ts
 | `error-handling.ts` | `HTTPError` and `TimeoutError` |
 | `api.spec.json` | Input for the type generator |
 | `shop-api.ts` | Sample output from `fetchwise generate` |
+| `frameworks/` | React, Vue, Svelte, Next, Nuxt, Angular, CJS, vanilla HTML |
 
 ## Multiple API hosts
 
@@ -62,7 +63,7 @@ node dist/cli.js generate examples/api.spec.json -o examples/shop-api.ts
 ```
 
 ```ts
-import { createClient } from "fetchwise";
+import { createClient } from "@poluru-labs/fetchwise";
 import type { ShopAPI } from "./shop-api.ts";
 
 const api = createClient<ShopAPI>({
@@ -80,7 +81,7 @@ const session = await api.get("/session", { baseURL: "auth" });
 ## Copy-paste starter
 
 ```ts
-import { createClient } from "fetchwise";
+import { createClient } from "@poluru-labs/fetchwise";
 
 const api = createClient({
   baseURL: {
