@@ -1,9 +1,12 @@
 {
   "name": "@poluru-labs/fetchwise",
   "version": "0.1.0",
-  "description": "A lightweight, type-safe HTTP client for TypeScript and JavaScript, built on the Fetch API.",
+  "description": "Type-safe Fetch HTTP client with retries, interceptors, validation, and multi-host baseURL. Published as @poluru-labs/fetchwise; not affiliated with the npm package fetchwise.",
   "license": "MIT",
-  "author": "poluru-labs",
+  "author": {
+    "name": "poluru-labs",
+    "url": "https://github.com/poluru-labs"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/poluru-labs/fetchwise.git"

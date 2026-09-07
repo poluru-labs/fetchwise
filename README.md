@@ -1,6 +1,8 @@
-# fetchwise
+# @poluru-labs/fetchwise
 
 A small, type-safe HTTP client for TypeScript and JavaScript. Built on the Fetch API.
+
+This package is **not affiliated** with the existing npm package [`fetchwise`](https://www.npmjs.com/package/fetchwise). Install this one as `@poluru-labs/fetchwise`.
 
 Works in **any JS environment** — browsers, Node, Deno, Bun, React Native, and frameworks like React, Vue, Angular, Lit, Next.js, and Nuxt.
 
