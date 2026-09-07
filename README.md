@@ -1,2 +1,230 @@
 # fetchwise
-A lightweight, type-safe HTTP client for TypeScript and JavaScript, built on the Fetch API. Simplify API integration with automatic retries, response validation, request and response interceptors, and generated API types.
+
+A small, type-safe HTTP client for TypeScript and JavaScript. Built on the Fetch API.
+
+Automatic retries · Response validation · Interceptors · Generated API types
+
+```ts
+import { createClient } from "fetchwise";
+
+const api = createClient({
+  baseURL: "https://jsonplaceholder.typicode.com",
+  retry: 3,
+});
+
+const users = await api.get("/users");
+```
+
+## Install
+
+```bash
+npm install fetchwise
+```
+
+Works in Node.js 18+, browsers, and any runtime with `fetch`.
+
+## Quick start
+
+```ts
+import { createClient } from "fetchwise";
+
+type User = { id: number; name: string; email: string };
+
+const api = createClient({
+  baseURL: "https://jsonplaceholder.typicode.com",
+  headers: { Accept: "application/json" },
+  timeout: 8_000,
+  retry: { attempts: 3, delay: 300 },
+});
+
+const users = await api.get<User[]>("/users");
+const user = await api.get<User>("/users/:id", { params: { id: 1 } });
+const created = await api.post<User>("/users", { name: "Ada", email: "ada@example.com" });
+```
+
+The same API works from JavaScript. See [`examples/javascript.js`](examples/javascript.js).
+
+## Features
+
+### Automatic retries
+
+Failed network calls, timeouts, and selected HTTP statuses are retried with backoff.
+
+```ts
+const api = createClient({
+  baseURL: "https://api.example.com",
+  retry: {
+    attempts: 3,
+    delay: 300,
+    backoff: "exponential",
+    retryOn: [408, 429, 500, 502, 503, 504],
+  },
+});
+```
+
+Pass `retry: 3` for defaults, or `retry: false` to turn retries off.
+
+### Response validation
+
+Pass any schema with a `parse()` method. Zod, Valibot, ArkType, or a tiny custom object all work.
+
+```ts
+const UserSchema = {
+  parse(data: unknown): User {
+    // throw if the payload is not a User
+    return data as User;
+  },
+};
+
+const user = await api.get("/users/1", { schema: UserSchema });
+```
+
+Invalid payloads throw `ValidationError`.
+
+### Request and response interceptors
+
+```ts
+api.interceptors.request.use((request) => {
+  request.headers.set("Authorization", `Bearer ${token}`);
+  return request;
+});
+
+api.interceptors.response.use((response) => {
+  console.log(response.status, response.url);
+  return response;
+});
+
+api.interceptors.error.use((error) => {
+  if (error.status === 401) logout();
+  return error;
+});
+```
+
+### Generated API types
+
+Describe routes once. fetchwise infers params, bodies, and responses.
+
+```ts
+interface API {
+  "GET /users": User[];
+  "GET /users/:id": User;
+  "POST /users": { body: CreateUser; response: User };
+}
+
+const api = createClient<API>({ baseURL: "https://api.example.com" });
+
+const users = await api.get("/users");
+const user = await api.get("/users/:id", { params: { id: 1 } });
+const created = await api.post("/users", { name: "Ada", email: "ada@example.com" });
+```
+
+Or generate that interface from JSON:
+
+```bash
+npx fetchwise generate api.spec.json -o api.types.ts
+```
+
+```json
+{
+  "name": "API",
+  "models": {
+    "User": "{ id: number; name: string; email: string }"
+  },
+  "routes": [
+    { "method": "GET", "path": "/users", "response": "User[]" },
+    { "method": "POST", "path": "/users", "body": "CreateUser", "response": "User" }
+  ]
+}
+```
+
+Named methods are available too:
+
+```ts
+import { defineApi } from "fetchwise";
+
+const users = defineApi({
+  client: api,
+  routes: {
+    getUser: { method: "GET", path: "/users/:id" },
+    createUser: { method: "POST", path: "/users" },
+  },
+});
+
+await users.getUser({ params: { id: 1 } });
+```
+
+## Examples
+
+Step-by-step files live in [`examples/`](examples). Start here:
+
+```bash
+npm install
+npm run example examples/basic.ts
+```
+
+How to run each example, generate types, and copy a starter snippet: [`examples/README.md`](examples/README.md).
+
+## API
+
+### `createClient(options)`
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `baseURL` | `string` | | Prefixed onto relative paths |
+| `headers` | `HeadersInit` | | Default headers |
+| `timeout` | `number` | | Request timeout in ms |
+| `retry` | `number \| RetryOptions \| false` | `false` | Retry policy |
+| `fetch` | `typeof fetch` | `globalThis.fetch` | Custom fetch implementation |
+
+`fetchwise(options)` is an alias of `createClient(options)`.
+
+### Methods
+
+```ts
+api.get(url, config?)
+api.post(url, body?, config?)
+api.put(url, body?, config?)
+api.patch(url, body?, config?)
+api.delete(url, config?)
+api.request(url, config?)   // returns parsed data
+api.send(url, config?)      // returns { data, status, headers, raw }
+api.extend(options)         // copy the client with new defaults
+```
+
+### Request config
+
+```ts
+{
+  headers, query, params, body,
+  timeout, retry, schema, signal,
+  parseAs: "json" | "text" | "blob" | "auto" | "raw",
+  fetchOptions, // extra Fetch init
+}
+```
+
+Path tokens like `/users/:id` are filled from `params`.
+
+### Errors
+
+| Class | When |
+| --- | --- |
+| `HTTPError` | Response status is not 2xx |
+| `TimeoutError` | The request exceeded `timeout` |
+| `ValidationError` | `schema.parse()` failed |
+| `FetchwiseError` | Network, abort, or other failures |
+
+```ts
+import { HTTPError } from "fetchwise";
+
+try {
+  await api.get("/missing");
+} catch (error) {
+  if (error instanceof HTTPError) {
+    console.log(error.status, error.data);
+  }
+}
+```
+
+## License
+
+[MIT](LICENSE)

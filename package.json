@@ -1,0 +1,63 @@
+{
+  "name": "fetchwise",
+  "version": "0.1.0",
+  "description": "A lightweight, type-safe HTTP client for TypeScript and JavaScript, built on the Fetch API.",
+  "license": "MIT",
+  "author": "poluru-labs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poluru-labs/fetchwise.git"
+  },
+  "bugs": {
+    "url": "https://github.com/poluru-labs/fetchwise/issues"
+  },
+  "homepage": "https://github.com/poluru-labs/fetchwise#readme",
+  "keywords": [
+    "fetch",
+    "http",
+    "client",
+    "typescript",
+    "type-safe",
+    "retry",
+    "interceptor",
+    "validation",
+    "api"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "bin": {
+    "fetchwise": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "example": "tsx",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}
