@@ -3,6 +3,7 @@ import type { HttpMethod } from "./types.js";
 export interface GenerateRoute {
   method: HttpMethod;
   path: string;
+  baseURL?: string;
   body?: string;
   query?: string;
   params?: string;
@@ -26,6 +27,7 @@ function formatModel(name: string, type: string): string {
 function formatRoute(route: GenerateRoute): string {
   const key = `'${route.method} ${route.path}'`;
   const fields = [
+    route.baseURL ? `baseURL: ${JSON.stringify(route.baseURL)}` : null,
     route.params ? `params: ${route.params}` : null,
     route.query ? `query: ${route.query}` : null,
     route.body ? `body: ${route.body}` : null,

@@ -10,6 +10,8 @@ export {
 
 export type {
   ApiSchema,
+  BaseURLConfig,
+  BaseURLMap,
   ClientOptions,
   GenerateRoute,
   GenerateSpec,

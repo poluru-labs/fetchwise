@@ -1,25 +1,19 @@
-import { createClient } from "../src/index.ts";
+import { createDemoClient } from "./mock-api.ts";
+import type { User } from "./mock-api.ts";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
+const api = createDemoClient({
   headers: { Accept: "application/json" },
   timeout: 8_000,
 });
 
 const users = await api.get<User[]>("/users");
-console.log("GET /users ->", users.slice(0, 2));
+console.log("GET api.shop.test/users ->", users);
 
 const user = await api.get<User>("/users/:id", { params: { id: 1 } });
-console.log("GET /users/1 ->", user);
+console.log("GET api.shop.test/users/1 ->", user);
 
 const created = await api.post<User>("/users", {
-  name: "Ada Lovelace",
-  email: "ada@example.com",
+  name: "Poluru Arun",
+  email: "poluru.arun@shop.test",
 });
-console.log("POST /users ->", created);
+console.log("POST api.shop.test/users ->", created);

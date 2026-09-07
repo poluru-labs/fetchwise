@@ -1,20 +1,15 @@
-import { createClient } from "../src/index.ts";
+import { createDemoClient } from "./mock-api.ts";
 
-const api = createClient({
-  baseURL: "https://httpstat.us",
+const api = createDemoClient({
   retry: {
     attempts: 3,
-    delay: 250,
-    backoff: "exponential",
+    delay: 40,
+    backoff: "fixed",
     jitter: false,
     retryOn: [408, 429, 500, 502, 503, 504],
   },
 });
 
-try {
-  // 200 succeeds immediately. Change this to /503 to watch retries.
-  const result = await api.get("/200", { parseAs: "text" });
-  console.log("Success:", result);
-} catch (error) {
-  console.error("Gave up after retries:", error);
-}
+// /flaky returns 503 twice, then 200.
+const result = await api.get("/flaky");
+console.log("Succeeded after retries:", result);

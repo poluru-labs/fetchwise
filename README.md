@@ -8,11 +8,16 @@ Automatic retries · Response validation · Interceptors · Generated API types
 import { createClient } from "fetchwise";
 
 const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
+  baseURL: {
+    default: "https://api.shop.com",
+    auth: "https://auth.shop.com",
+    payments: "https://payments.shop.com",
+  },
   retry: 3,
 });
 
 const users = await api.get("/users");
+const session = await api.get("/session", { baseURL: "auth" });
 ```
 
 ## Install
@@ -31,7 +36,7 @@ import { createClient } from "fetchwise";
 type User = { id: number; name: string; email: string };
 
 const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
+  baseURL: "https://api.shop.com",
   headers: { Accept: "application/json" },
   timeout: 8_000,
   retry: { attempts: 3, delay: 300 },
@@ -39,7 +44,7 @@ const api = createClient({
 
 const users = await api.get<User[]>("/users");
 const user = await api.get<User>("/users/:id", { params: { id: 1 } });
-const created = await api.post<User>("/users", { name: "Ada", email: "ada@example.com" });
+const created = await api.post<User>("/users", { name: "Poluru Ada", email: "poluru.ada@shop.com" });
 ```
 
 The same API works from JavaScript. See [`examples/javascript.js`](examples/javascript.js).
@@ -63,6 +68,29 @@ const api = createClient({
 ```
 
 Pass `retry: 3` for defaults, or `retry: false` to turn retries off.
+
+### Multiple API hosts
+
+`baseURL` can be one host or a map of names. Pick a host per request, pass a full URL, or `extend()` a client for one API.
+
+```ts
+const api = createClient({
+  baseURL: {
+    default: "https://api.shop.com",
+    auth: "https://auth.shop.com",
+    payments: "https://payments.shop.com",
+  },
+});
+
+await api.get("/users");
+await api.get("/session", { baseURL: "auth" });
+await api.get("/charges", { baseURL: "payments" });
+await api.get("/health", { baseURL: "https://status.shop.com" });
+await api.get("https://edge.shop.com/ping");
+
+const payments = api.extend({ baseURL: { default: "https://payments.shop.com" } });
+await payments.post("/charges", { amount: 2500 });
+```
 
 ### Response validation
 
@@ -111,11 +139,11 @@ interface API {
   "POST /users": { body: CreateUser; response: User };
 }
 
-const api = createClient<API>({ baseURL: "https://api.example.com" });
+const api = createClient<API>({ baseURL: "https://api.shop.com" });
 
 const users = await api.get("/users");
 const user = await api.get("/users/:id", { params: { id: 1 } });
-const created = await api.post("/users", { name: "Ada", email: "ada@example.com" });
+const created = await api.post("/users", { name: "Poluru Ada", email: "poluru.ada@shop.com" });
 ```
 
 Or generate that interface from JSON:
@@ -170,7 +198,7 @@ How to run each example, generate types, and copy a starter snippet: [`examples/
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `baseURL` | `string` | | Prefixed onto relative paths |
+| `baseURL` | `string \| { default?: string; [name: string]: string }` | | Default host, or named hosts for multiple APIs |
 | `headers` | `HeadersInit` | | Default headers |
 | `timeout` | `number` | | Request timeout in ms |
 | `retry` | `number \| RetryOptions \| false` | `false` | Retry policy |
@@ -195,6 +223,7 @@ api.extend(options)         // copy the client with new defaults
 
 ```ts
 {
+  baseURL, // named host or full URL for this request
   headers, query, params, body,
   timeout, retry, schema, signal,
   parseAs: "json" | "text" | "blob" | "auto" | "raw",

@@ -25,7 +25,7 @@ import type {
   ResponseContext,
   RouteDef,
 } from "./types.js";
-import { resolveURL } from "./url.js";
+import { mergeBaseURL, resolveBaseURL, resolveURL } from "./url.js";
 
 function mergeHeaders(...groups: Array<HeadersInit | undefined>): Headers {
   const headers = new Headers();
@@ -97,6 +97,7 @@ export class Fetchwise<TApi extends ApiSchema = ApiSchema> {
     const next = new Fetchwise<TApi>({
       ...this.options,
       ...options,
+      baseURL: mergeBaseURL(this.options.baseURL, options.baseURL),
       headers: mergeHeaders(this.options.headers, options.headers),
       retry: options.retry !== undefined ? options.retry : this.options.retry,
     });
@@ -170,6 +171,12 @@ export class Fetchwise<TApi extends ApiSchema = ApiSchema> {
     url: string,
     config: RequestConfig<T> = {},
   ): Promise<ResponseContext<T>> {
+    try {
+      resolveBaseURL(this.options.baseURL, config.baseURL);
+    } catch (error) {
+      throw await this.runErrorInterceptors(error);
+    }
+
     const retry = normalizeRetry(
       config.retry !== undefined ? config.retry : this.options.retry,
     );
@@ -200,7 +207,7 @@ export class Fetchwise<TApi extends ApiSchema = ApiSchema> {
     const headers = mergeHeaders(this.options.headers, config.headers);
     const body = serializeBody(config.body, headers);
     const resolvedURL = resolveURL(
-      this.options.baseURL,
+      resolveBaseURL(this.options.baseURL, config.baseURL),
       url,
       config.params,
       config.query,

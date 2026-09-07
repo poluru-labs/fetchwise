@@ -1,8 +1,7 @@
-import { createClient, HTTPError } from "../src/index.ts";
+import { HTTPError } from "../src/index.ts";
+import { createDemoClient } from "./mock-api.ts";
 
-const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
-});
+const api = createDemoClient();
 
 api.interceptors.request.use((request) => {
   request.headers.set("Authorization", "Bearer demo-token");
@@ -23,5 +22,5 @@ api.interceptors.error.use((error) => {
   return error;
 });
 
-const post = await api.get("/posts/1");
-console.log(post);
+const session = await api.get("/session", { baseURL: "auth" });
+console.log(session);

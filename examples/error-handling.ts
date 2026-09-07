@@ -1,7 +1,7 @@
-import { createClient, HTTPError, TimeoutError } from "../src/index.ts";
+import { HTTPError, TimeoutError } from "../src/index.ts";
+import { createDemoClient } from "./mock-api.ts";
 
-const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
+const api = createDemoClient({
   timeout: 8_000,
   retry: false,
 });

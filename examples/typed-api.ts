@@ -1,36 +1,44 @@
-import { createClient, defineApi } from "../src/index.ts";
-import type { CreateUser, JsonPlaceholder, User } from "./jsonplaceholder.ts";
+import { defineApi } from "../src/index.ts";
+import { createDemoClient } from "./mock-api.ts";
+import type { CreateUser, ShopAPI, User } from "./shop-api.ts";
 
-// 1) Use generated types from `fetchwise generate examples/api.spec.json`
-const client = createClient<JsonPlaceholder>({
-  baseURL: "https://jsonplaceholder.typicode.com",
+const api = createDemoClient<ShopAPI>();
+
+const users = await api.get("/users");
+const ada = await api.get("/users/:id", { params: { id: 1 } });
+const created = await api.post("/users", {
+  name: "Poluru Ada",
+  email: "poluru.ada@shop.test",
+} satisfies CreateUser);
+const session = await api.get("/session", {
+  baseURL: "auth",
+  headers: { Authorization: "Bearer demo-token" },
 });
 
-const users = await client.get("/users");
-const ada = await client.get("/users/:id", { params: { id: 1 } });
-const created = await client.post("/users", {
-  name: "Ada",
-  email: "ada@example.com",
-} satisfies CreateUser);
+console.log("Typed client:", users.length, ada.name, created.id, session.token);
 
-console.log("Typed client:", users.length, ada.name, created.id);
-
-// 2) Named methods from a route map
-const api = defineApi({
-  client,
+const routes = defineApi({
+  client: api,
   routes: {
     getUser: {
       method: "GET",
       path: "/users/:id",
       schema: { parse: (data: unknown) => data as User },
     },
-    createUser: {
-      method: "POST",
-      path: "/users",
-      schema: { parse: (data: unknown) => data as User },
+    getSession: {
+      method: "GET",
+      path: "/session",
+      baseURL: "auth",
+      headers: { Authorization: "Bearer demo-token" },
+    },
+    listCharges: {
+      method: "GET",
+      path: "/charges",
+      baseURL: "payments",
     },
   },
 });
 
-const named = await api.getUser({ params: { id: 1 } });
-console.log("Named route:", named.email);
+const named = await routes.getUser({ params: { id: 1 } });
+const namedSession = await routes.getSession();
+console.log("Named routes:", named.email, namedSession);

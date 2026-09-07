@@ -32,8 +32,29 @@ export type QueryValue = string | number | boolean | null | undefined;
 export type QueryParams = Record<string, QueryValue | QueryValue[]>;
 export type PathParams = Record<string, string | number | boolean>;
 
+export type BaseURLMap = {
+  default?: string;
+  [name: string]: string | undefined;
+};
+
+export type BaseURLConfig = string | BaseURLMap;
+
 export interface ClientOptions {
-  baseURL?: string;
+  /**
+   * Default host, or a map of named hosts when one client talks to
+   * several APIs.
+   *
+   * @example
+   * createClient({ baseURL: "https://api.shop.com" })
+   * createClient({
+   *   baseURL: {
+   *     default: "https://api.shop.com",
+   *     auth: "https://auth.shop.com",
+   *     payments: "https://payments.shop.com",
+   *   },
+   * })
+   */
+  baseURL?: BaseURLConfig;
   headers?: HeadersInit;
   timeout?: number;
   retry?: number | RetryOptions | false;
@@ -42,6 +63,11 @@ export interface ClientOptions {
 
 export interface RequestConfig<T = unknown> {
   method?: HttpMethod;
+  /**
+   * Named host from `baseURL`, or a full URL for this request only.
+   * Absolute paths like `https://...` skip the default host.
+   */
+  baseURL?: string;
   headers?: HeadersInit;
   query?: QueryParams;
   params?: PathParams;

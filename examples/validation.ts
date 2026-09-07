@@ -1,12 +1,6 @@
-import { createClient, ValidationError } from "../src/index.ts";
+import { ValidationError } from "../src/index.ts";
+import { createDemoClient, type User } from "./mock-api.ts";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-// Any object with parse() works — including Zod, Valibot, and ArkType.
 const UserSchema = {
   parse(data: unknown): User {
     if (!data || typeof data !== "object") {
@@ -22,11 +16,9 @@ const UserSchema = {
   },
 };
 
-const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
-});
+const api = createDemoClient();
 
-const user = await api.get("/users/1", { schema: UserSchema });
+const user = await api.get("/users/:id", { params: { id: 1 }, schema: UserSchema });
 console.log("Validated user:", user.name, user.email);
 
 try {

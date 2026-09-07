@@ -13,6 +13,12 @@ describe("joinURL", () => {
       "https://other.test/x",
     );
   });
+
+  it("does not prefix an absolute URL with another host", () => {
+    expect(joinURL("https://api.shop.com", "https://payments.shop.com/charges")).toBe(
+      "https://payments.shop.com/charges",
+    );
+  });
 });
 
 describe("applyParams", () => {

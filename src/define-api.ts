@@ -10,6 +10,8 @@ import type {
 export interface RouteConfig<TResponse = unknown> {
   method: HttpMethod;
   path: string;
+  /** Named host or full URL when this route lives on a different API */
+  baseURL?: string;
   schema?: Schema<TResponse>;
   headers?: HeadersInit;
 }
@@ -19,6 +21,7 @@ export interface RouteInput {
   query?: QueryParams;
   body?: unknown;
   headers?: HeadersInit;
+  baseURL?: string;
   timeout?: number;
   retry?: RequestConfig["retry"];
   signal?: AbortSignal;
@@ -55,6 +58,7 @@ export function defineApi<TRoutes extends Record<string, RouteConfig<any>>>(opti
     ) =>
       options.client.request(route.path, {
         method: route.method,
+        baseURL: input.baseURL ?? route.baseURL,
         params: input.params,
         query: input.query,
         body: input.body,

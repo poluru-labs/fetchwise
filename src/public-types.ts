@@ -1,5 +1,7 @@
 export type {
   ApiSchema,
+  BaseURLConfig,
+  BaseURLMap,
   ClientOptions,
   HttpMethod,
   QueryParams,

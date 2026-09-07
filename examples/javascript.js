@@ -1,15 +1,12 @@
-import { createClient } from "../src/index.ts";
+import { createDemoClient } from "./mock-api.ts";
 
-const api = createClient({
-  baseURL: "https://jsonplaceholder.typicode.com",
-});
+const api = createDemoClient();
 
-const users = await api.get("/users", { query: { _limit: 2 } });
+const users = await api.get("/users", { query: { limit: 1 } });
 console.log("Users:", users);
 
-const created = await api.post("/posts", {
-  title: "Hello from fetchwise",
-  body: "Works in plain JavaScript too.",
-  userId: 1,
+const created = await api.post("/users", {
+  name: "Poluru Arun",
+  email: "poluru.arun@shop.test",
 });
-console.log("Created post:", created);
+console.log("Created user:", created);

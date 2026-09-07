@@ -11,6 +11,7 @@ describe("generateTypes", () => {
       routes: [
         { method: "GET", path: "/pets", response: "Pet[]" },
         { method: "POST", path: "/pets", body: "{ name: string }", response: "Pet" },
+        { method: "GET", path: "/session", baseURL: "auth", response: "Session" },
       ],
     });
 
@@ -18,5 +19,6 @@ describe("generateTypes", () => {
     expect(source).toContain("'GET /pets': Pet[]");
     expect(source).toContain("body: { name: string }");
     expect(source).toContain("export interface PetsAPI");
+    expect(source).toContain('baseURL: "auth"');
   });
 });
