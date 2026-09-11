@@ -1,4 +1,4 @@
-# @poluru-labs/fetchwise
+# modern fetchwise
 
 A small, type-safe HTTP client for TypeScript and JavaScript. Built on the Fetch API.
 
