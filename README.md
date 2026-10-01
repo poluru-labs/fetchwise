@@ -300,6 +300,10 @@ try {
 
 Use `error.name` when multiple copies of the package are bundled.
 
+## Community
+
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 [MIT](LICENSE)
