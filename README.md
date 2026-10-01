@@ -306,7 +306,7 @@ See [SECURITY.md](SECURITY.md) for supported versions and how to report a vulner
 
 ## Community
 
-This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up the repo, run tests, and open a pull request.
 
 Use [issue templates](https://github.com/poluru-labs/fetchwise/issues/new/choose) for bugs, features, and docs. Questions belong in [Discussions](https://github.com/poluru-labs/fetchwise/discussions).
 
