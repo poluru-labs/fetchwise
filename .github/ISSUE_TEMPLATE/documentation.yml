@@ -1,0 +1,51 @@
+name: Documentation
+description: A docs, README, or example problem or gap.
+title: "[Docs]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for unclear, missing, or outdated documentation.
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where
+      options:
+        - README
+        - examples/typescript
+        - examples/javascript
+        - examples/react
+        - examples/vue
+        - examples/angular
+        - examples/lit
+        - API types / JSDoc
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or missing?
+      description: Quote the current text if you can, and say what you expected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change
+      description: Optional rewrite, link, or extra example.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/poluru-labs/fetchwise/blob/main/CODE_OF_CONDUCT.md).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

@@ -1,0 +1,82 @@
+name: Bug report
+description: Something is not working as documented.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug in `@poluru-labs/fetchwise`.
+
+        Please search [existing issues](https://github.com/poluru-labs/fetchwise/issues) first.
+        Security issues belong in a [private advisory](https://github.com/poluru-labs/fetchwise/security/advisories/new), not here.
+
+  - type: checkboxes
+    id: existing
+    attributes:
+      label: Is there an existing issue for this?
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear, concise description of what went wrong.
+      placeholder: Requests with retry still fail on 503, even after three attempts.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Minimal steps or code that reproduce the problem.
+      placeholder: |
+        1. Create a client with retry: 3
+        2. Call api.get("/flaky")
+        3. See error...
+      render: ts
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Runtime details help us reproduce the issue.
+      value: |
+        - `@poluru-labs/fetchwise` version:
+        - Runtime (Node, browser, Deno, Bun, Worker):
+        - Runtime version:
+        - OS:
+        - Bundler / framework (if any):
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Error message, stack trace, or network output. This is formatted as a code block.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/poluru-labs/fetchwise/blob/main/CODE_OF_CONDUCT.md).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

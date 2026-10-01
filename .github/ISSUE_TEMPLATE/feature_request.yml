@@ -1,0 +1,75 @@
+name: Feature request
+description: Suggest an enhancement or new API.
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for an idea that would make `@poluru-labs/fetchwise` more useful.
+
+        Please search [existing issues](https://github.com/poluru-labs/fetchwise/issues) first.
+
+  - type: checkboxes
+    id: existing
+    attributes:
+      label: Is there an existing issue for this?
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this feature solve? Who is blocked today?
+      placeholder: I need to honor Retry-After on 429 responses.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should the API look? Include a short code sketch if you can.
+      placeholder: |
+        const api = createClient({
+          retry: { honorRetryAfter: true },
+        });
+      render: ts
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Other APIs, libraries, or workarounds you considered.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Client / request API
+        - Retries and timeouts
+        - Interceptors
+        - Validation / schemas
+        - Typed routes / generate
+        - Documentation / examples
+        - TypeScript types
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/poluru-labs/fetchwise/blob/main/CODE_OF_CONDUCT.md).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
